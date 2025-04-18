@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Search App</title>
+</head>
+<body>
+  <h1>Search App</h1>
+  <input type="text" id="search" placeholder="Type to search…">
+  <ul id="results"></ul>
+
+  <script>
+    const input = document.getElementById('search');
+    const list  = document.getElementById('results');
+    let timer;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const q = input.value.trim();
+        const res = await fetch('/search?q=' + encodeURIComponent(q));
+        const items = await res.json();
+        list.innerHTML = '';
+        for (let itm of items) {
+          const li = document.createElement('li');
+          li.textContent = `${itm.title}: ${itm.description}`;
+          list.appendChild(li);
+        }
+      }, 300);
+    });
+  </script>
+</body>
+</html>
